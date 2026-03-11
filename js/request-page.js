@@ -274,10 +274,20 @@ function closePM() {
   if (btn)     btn.textContent = '📋 Manage Project';
 }
 
+function syncPMFromDOM() {
+  document.querySelectorAll('.pm-row').forEach((row, i) => {
+    if (!pmTasks[i]) return;
+    pmTasks[i].name    = row.querySelector('.pm-name').value    || '';
+    pmTasks[i].status  = row.querySelector('.pm-status').value  || 'To Do';
+    pmTasks[i].artist  = row.querySelector('.pm-artist').value  || '';
+    pmTasks[i].dueDate = row.querySelector('.pm-date').value    || '';
+  });
+}
+
 function addPMTask() {
+  syncPMFromDOM();
   pmTasks.push({ id: Date.now() + Math.random(), name: '', status: 'To Do', artist: '', dueDate: '' });
   renderPMTasks();
-  // Auto-focus the new task name input
   const rows = document.querySelectorAll('.pm-row');
   if (rows.length) {
     const lastInput = rows[rows.length - 1].querySelector('input[type="text"]');
@@ -286,6 +296,7 @@ function addPMTask() {
 }
 
 function removePMTask(idx) {
+  syncPMFromDOM();
   pmTasks.splice(idx, 1);
   renderPMTasks();
 }
