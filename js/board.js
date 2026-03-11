@@ -4,6 +4,7 @@ let currentFilter  = 'all';
 let searchQuery    = '';
 let popup          = null;
 let pmFilterActive = false;
+let artistFilter   = '';
 
 // ── Filtering ─────────────────────────────────────────────────────────────────
 
@@ -31,6 +32,11 @@ function matchesPMFilter(r) {
   return !!(r.projectManager && r.projectManager.enabled);
 }
 
+function matchesArtistFilter(r) {
+  if (!artistFilter) return true;
+  return (r.artist || '') === artistFilter;
+}
+
 function matchesSearch(r) {
   if (!searchQuery) return true;
   const q = searchQuery.toLowerCase();
@@ -46,7 +52,7 @@ function matchesSearch(r) {
 
 function renderBoard() {
   const all      = getRequests();
-  const filtered = filterRequests(all).filter(matchesSearch).filter(matchesPMFilter);
+  const filtered = filterRequests(all).filter(matchesSearch).filter(matchesPMFilter).filter(matchesArtistFilter);
 
   COLUMNS.forEach(col => {
     const colId    = 'col-' + col.replace(/\s+/g, '-').toLowerCase();
@@ -173,6 +179,20 @@ document.addEventListener('DOMContentLoaded', () => {
     pmBtn.addEventListener('click', () => {
       pmFilterActive = !pmFilterActive;
       pmBtn.classList.toggle('active', pmFilterActive);
+      renderBoard();
+    });
+  }
+
+  const artistSel = document.getElementById('artist-filter');
+  if (artistSel) {
+    ARTISTS.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = a;
+      artistSel.appendChild(opt);
+    });
+    artistSel.addEventListener('change', () => {
+      artistFilter = artistSel.value;
       renderBoard();
     });
   }

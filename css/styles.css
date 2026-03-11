@@ -66,6 +66,23 @@ html, body {
 .nav-btn.primary      { background: #c8102e; border-color: #c8102e; }
 .nav-btn.primary:hover{ background: #a50e26; border-color: #a50e26; }
 
+.nav-select {
+  padding: 5px 10px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: var(--radius);
+  background: transparent;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  color-scheme: dark;
+}
+.nav-select:hover  { border-color: rgba(255,255,255,0.7); }
+.nav-select option { background: var(--ink); color: #fff; font-weight: 400; }
+
 .nav-search {
   margin-left: auto;
 }
