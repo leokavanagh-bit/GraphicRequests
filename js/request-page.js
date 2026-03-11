@@ -4,6 +4,8 @@ let currentRequest    = null;
 let pageFiles         = [];
 let deliverableImages = [];
 let pendingReads      = 0;
+let pmTasks           = [];   // working copy of project manager tasks
+let pmEnabled         = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
@@ -26,8 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     pageFiles         = (currentRequest.files || []).slice();
     deliverableImages = ((currentRequest.deliverable || {}).images || []).slice();
+    pmTasks           = ((currentRequest.projectManager || {}).tasks || []).map(t => ({...t}));
+    pmEnabled         = !!(currentRequest.projectManager && currentRequest.projectManager.enabled);
 
     renderRequest();
+    if (pmEnabled) openPM();
 
     document.getElementById('status').addEventListener('change', updateColorIndicator);
 
@@ -74,6 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
           location: fval('d-location'),
           images:   deliverableImages.slice(),
         },
+        projectManager: {
+          enabled: pmEnabled,
+          tasks:   collectPMTasks(),
+        },
       };
       try {
         await saveRequest(updated);
@@ -97,6 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+
+    document.getElementById('btn-manage-project').addEventListener('click', () => {
+      pmEnabled = !pmEnabled;
+      if (pmEnabled) { openPM(); } else { closePM(); }
+    });
+
+    document.getElementById('pm-add-task').addEventListener('click', () => addPMTask());
   });
 });
 
@@ -228,4 +244,122 @@ function populateSelect(id, options, placeholder) {
   if (!sel) return;
   sel.innerHTML = `<option value="">${placeholder}</option>` +
     options.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+}
+
+// ── Project Manager ───────────────────────────────────────────────────────────
+
+const PM_STATUSES = ['To Do', 'In Progress', 'Pending Approval', 'Approved'];
+
+const PM_STATUS_CLASS = {
+  'To Do':            'pm-status-todo',
+  'In Progress':      'pm-status-inprogress',
+  'Pending Approval': 'pm-status-pending',
+  'Approved':         'pm-status-approved',
+};
+
+function openPM() {
+  pmEnabled = true;
+  const section = document.getElementById('pm-section');
+  const btn     = document.getElementById('btn-manage-project');
+  if (section) section.style.display = 'block';
+  if (btn)     btn.textContent = '✕ Hide Project Manager';
+  renderPMTasks();
+}
+
+function closePM() {
+  pmEnabled = false;
+  const section = document.getElementById('pm-section');
+  const btn     = document.getElementById('btn-manage-project');
+  if (section) section.style.display = 'none';
+  if (btn)     btn.textContent = '📋 Manage Project';
+}
+
+function addPMTask() {
+  pmTasks.push({ id: Date.now() + Math.random(), name: '', status: 'To Do', artist: '', dueDate: '' });
+  renderPMTasks();
+  // Auto-focus the new task name input
+  const rows = document.querySelectorAll('.pm-row');
+  if (rows.length) {
+    const lastInput = rows[rows.length - 1].querySelector('input[type="text"]');
+    if (lastInput) lastInput.focus();
+  }
+}
+
+function removePMTask(idx) {
+  pmTasks.splice(idx, 1);
+  renderPMTasks();
+}
+
+function collectPMTasks() {
+  const rows = document.querySelectorAll('.pm-row');
+  return Array.from(rows).map((row, i) => ({
+    id:      pmTasks[i] ? pmTasks[i].id : Date.now() + i,
+    name:    row.querySelector('.pm-name').value   || '',
+    status:  row.querySelector('.pm-status').value || 'To Do',
+    artist:  row.querySelector('.pm-artist').value || '',
+    dueDate: row.querySelector('.pm-date').value   || '',
+  }));
+}
+
+function renderPMTasks() {
+  const container = document.getElementById('pm-tasks');
+  const empty     = document.getElementById('pm-empty');
+  if (!container) return;
+
+  if (!pmTasks.length) {
+    container.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  container.innerHTML = pmTasks.map((task, i) => {
+    const artistOpts = ARTISTS.map(a =>
+      `<option value="${escapeHtml(a)}" ${a === task.artist ? 'selected' : ''}>${escapeHtml(a)}</option>`
+    ).join('');
+
+    const statusOpts = PM_STATUSES.map(s =>
+      `<option value="${escapeHtml(s)}" ${s === task.status ? 'selected' : ''}>${escapeHtml(s)}</option>`
+    ).join('');
+
+    const statusClass = PM_STATUS_CLASS[task.status] || '';
+
+    return `
+      <div class="pm-row" data-idx="${i}">
+        <div class="pm-cell">
+          <input type="text" class="pm-name" value="${escapeHtml(task.name)}" placeholder="Task name…">
+        </div>
+        <div class="pm-cell">
+          <select class="pm-status ${statusClass}" onchange="onPMStatusChange(this)">
+            ${statusOpts}
+          </select>
+        </div>
+        <div class="pm-cell">
+          <select class="pm-artist">
+            <option value="">Assign artist…</option>
+            ${artistOpts}
+          </select>
+        </div>
+        <div class="pm-cell">
+          <input type="date" class="pm-date" value="${escapeHtml(task.dueDate || '')}">
+        </div>
+        <div class="pm-cell">
+          <button type="button" class="pm-delete-btn" onclick="removePMTask(${i})" title="Remove task">✕</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Enter key on name field adds a new row
+  container.querySelectorAll('.pm-name').forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); addPMTask(); }
+    });
+  });
+}
+
+function onPMStatusChange(sel) {
+  // Remove all status classes then apply the correct one
+  Object.values(PM_STATUS_CLASS).forEach(c => sel.classList.remove(c));
+  const cls = PM_STATUS_CLASS[sel.value];
+  if (cls) sel.classList.add(cls);
 }

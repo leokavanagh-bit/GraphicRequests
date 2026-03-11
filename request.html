@@ -167,6 +167,30 @@
     <span>Last updated: <strong id="req-updated">—</strong></span>
   </div>
 
+  <!-- Project Manager -->
+  <div id="pm-section" style="display:none; margin-top:32px;">
+    <div class="req-section-title">Project Manager</div>
+    <div class="pm-wrap">
+      <div class="pm-col-headers">
+        <span>Task</span>
+        <span>Status</span>
+        <span>Artist</span>
+        <span>Due Date</span>
+        <span></span>
+      </div>
+      <div class="pm-tasks" id="pm-tasks">
+        <div class="pm-empty" id="pm-empty">No tasks yet — click "Add Task" to get started.</div>
+      </div>
+      <div class="pm-add-row">
+        <button class="pm-add-btn" id="pm-add-task">+ Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions" style="margin-top:24px;">
+    <button class="btn btn-secondary" id="btn-manage-project">📋 Manage Project</button>
+  </div>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>

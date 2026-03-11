@@ -1,8 +1,9 @@
 'use strict';
 
-let currentFilter = 'all';
-let searchQuery   = '';
-let popup         = null;
+let currentFilter  = 'all';
+let searchQuery    = '';
+let popup          = null;
+let pmFilterActive = false;
 
 // ── Filtering ─────────────────────────────────────────────────────────────────
 
@@ -25,6 +26,11 @@ function filterRequests(requests) {
   }
 }
 
+function matchesPMFilter(r) {
+  if (!pmFilterActive) return true;
+  return !!(r.projectManager && r.projectManager.enabled);
+}
+
 function matchesSearch(r) {
   if (!searchQuery) return true;
   const q = searchQuery.toLowerCase();
@@ -40,7 +46,7 @@ function matchesSearch(r) {
 
 function renderBoard() {
   const all      = getRequests();
-  const filtered = filterRequests(all).filter(matchesSearch);
+  const filtered = filterRequests(all).filter(matchesSearch).filter(matchesPMFilter);
 
   COLUMNS.forEach(col => {
     const colId    = 'col-' + col.replace(/\s+/g, '-').toLowerCase();
@@ -78,11 +84,15 @@ function createCard(request) {
     ? `<span class="card-due">${formatDate(request.requiredDate)}${request.dueTime ? ' · ' + request.dueTime : ''}</span>`
     : '';
 
+  const pmBadge = (request.projectManager && request.projectManager.enabled)
+    ? `<span class="card-pm-badge">Project</span>` : '';
+
   card.innerHTML = `
     <div class="card-id">${escapeHtml(request.id)}</div>
     <div class="card-title">${escapeHtml(request.title || 'Untitled')}</div>
     <div class="card-footer">
       ${request.graphicType ? `<span class="card-type">${escapeHtml(request.graphicType)}</span>` : ''}
+      ${pmBadge}
       ${dueLabel}
     </div>
   `;
@@ -156,6 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const search = document.getElementById('search-input');
   if (search) {
     search.addEventListener('input', () => { searchQuery = search.value; renderBoard(); });
+  }
+
+  const pmBtn = document.getElementById('btn-pm-filter');
+  if (pmBtn) {
+    pmBtn.addEventListener('click', () => {
+      pmFilterActive = !pmFilterActive;
+      pmBtn.classList.toggle('active', pmFilterActive);
+      renderBoard();
+    });
   }
 
   setInterval(renderBoard, 60000);
