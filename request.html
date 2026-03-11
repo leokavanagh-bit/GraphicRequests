@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request — GFX Requests</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-logo">GFX Requests</span>
+  <div class="nav-divider"></div>
+  <button class="nav-btn" onclick="window.location.href='index.html'">← Board</button>
+</nav>
+
+<div class="page-wrap">
+
+  <a href="index.html" class="back-link">← Back to Board</a>
+
+  <!-- Header -->
+  <div class="req-header">
+    <div class="req-header-text">
+      <div class="req-id" id="req-id">REQ-0000</div>
+      <div class="req-title-display" id="req-title">Loading…</div>
+    </div>
+    <div class="card-color-indicator" id="card-color-indicator" title="Card colour based on due time / status"></div>
+  </div>
+
+  <!-- Assignment -->
+  <div class="req-section-title">Assignment</div>
+  <div class="req-controls">
+    <div class="form-group">
+      <label class="req-field-label" for="status">Status</label>
+      <select id="status"></select>
+    </div>
+    <div class="form-group">
+      <label class="req-field-label" for="artist">Artist</label>
+      <select id="artist"></select>
+    </div>
+  </div>
+
+  <!-- Editable request fields -->
+  <div class="req-section-title">Request Details</div>
+  <div class="form-grid">
+
+    <div class="form-group full-width">
+      <label for="f-title">Title</label>
+      <input type="text" id="f-title" placeholder="Request title">
+    </div>
+
+    <div class="form-group">
+      <label for="f-storyBin">Story Bin</label>
+      <input type="text" id="f-storyBin" placeholder="Story bin reference">
+    </div>
+
+    <div class="form-group">
+      <label for="f-graphicType">Graphic Type</label>
+      <select id="f-graphicType"></select>
+    </div>
+
+    <div class="form-group">
+      <label for="f-destination">Destination</label>
+      <select id="f-destination"></select>
+    </div>
+
+    <div class="form-group">
+      <label for="f-market">Market</label>
+      <select id="f-market"></select>
+    </div>
+
+    <div class="form-group">
+      <label for="f-show">Show</label>
+      <select id="f-show"></select>
+    </div>
+
+    <div class="form-section-title">Contact</div>
+
+    <div class="form-group">
+      <label for="f-requestedBy">Requested By</label>
+      <input type="text" id="f-requestedBy" placeholder="Full name">
+    </div>
+
+    <div class="form-group">
+      <label for="f-email">Email</label>
+      <input type="email" id="f-email" placeholder="name@globalnews.ca">
+    </div>
+
+    <div class="form-group">
+      <label for="f-phone">Phone</label>
+      <input type="tel" id="f-phone" placeholder="Extension or direct line">
+    </div>
+
+    <div class="form-section-title">Scheduling</div>
+
+    <div class="form-group">
+      <label for="f-requiredDate">Required Date</label>
+      <input type="date" id="f-requiredDate">
+    </div>
+
+    <div class="form-group">
+      <label for="f-dueTime">Due Time</label>
+      <input type="text" id="f-dueTime" placeholder="e.g. 17:30">
+    </div>
+
+    <div class="form-group">
+      <label for="f-estimatedTime">Estimated Time</label>
+      <input type="text" id="f-estimatedTime" placeholder="e.g. 2 hours">
+    </div>
+
+    <div class="form-section-title">Content</div>
+
+    <div class="form-group full-width">
+      <label for="f-keywords">Keywords</label>
+      <input type="text" id="f-keywords" placeholder="Comma-separated keywords">
+    </div>
+
+    <div class="form-group full-width">
+      <label for="f-details">Details</label>
+      <textarea id="f-details" placeholder="Full description of the graphic request…"></textarea>
+    </div>
+
+    <!-- Attachments -->
+    <div class="form-section-title">Attachments</div>
+
+    <div class="drop-zone" id="dropZone">
+      <span class="drop-icon">📎</span>
+      Drag &amp; drop files here, or <strong>click to browse</strong>
+      <div style="font-size:0.72rem;margin-top:5px;color:#bbb;">Add more attachments</div>
+    </div>
+    <input type="file" id="fileInput" multiple hidden>
+
+    <div id="req-files"></div>
+
+  </div>
+
+  <!-- Deliverables -->
+  <div class="req-section-title">Deliverables</div>
+  <div class="deliverables-wrap">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="d-fileName">File Name</label>
+        <input type="text" id="d-fileName" placeholder="e.g. Morning_Map_20260311.png">
+      </div>
+      <div class="form-group">
+        <label for="d-location">Location</label>
+        <input type="text" id="d-location" placeholder="e.g. Streamline / Shows / Morning">
+      </div>
+    </div>
+    <div class="drop-zone deliverable-drop" id="deliverableDropZone">
+      <span class="drop-icon">🖼</span>
+      Drag &amp; drop images here, or <strong>click to browse</strong>
+      <div style="font-size:0.72rem;margin-top:5px;color:#bbb;">Images only — thumbnails will appear below</div>
+    </div>
+    <input type="file" id="deliverableFileInput" accept="image/*" multiple hidden>
+    <div id="deliverable-thumbs" class="deliverable-thumbs"></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="form-actions" style="margin-top:32px;">
+    <button class="btn btn-primary" id="btn-update">Update Request</button>
+    <button class="btn btn-danger"  id="btn-delete">Delete Request</button>
+  </div>
+
+  <div class="req-timestamps">
+    <span>Created: <strong id="req-created">—</strong></span>
+    <span>Last updated: <strong id="req-updated">—</strong></span>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="js/app.js"></script>
+<script src="js/request-page.js"></script>
+</body>
+</html>

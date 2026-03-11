@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — GFX Requests</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-logo">GFX Requests</span>
+  <div class="nav-divider"></div>
+  <button class="nav-btn" onclick="window.location.href='index.html'">← Board</button>
+  <div class="nav-divider"></div>
+  <button class="nav-btn active" id="gal-btn-all">All</button>
+  <button class="nav-btn" id="gal-btn-today">Today</button>
+  <button class="nav-btn" id="gal-btn-yesterday">Yesterday</button>
+  <div class="nav-divider"></div>
+  <div class="gal-date-range">
+    <input type="date" id="gal-from" class="gal-date-input" placeholder="From">
+    <span class="gal-date-sep">—</span>
+    <input type="date" id="gal-to" class="gal-date-input" placeholder="To">
+  </div>
+</nav>
+
+<div class="gallery-wrap">
+  <div id="gallery-grid" class="gallery-grid"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="js/app.js"></script>
+<script src="js/gallery.js"></script>
+</body>
+</html>
