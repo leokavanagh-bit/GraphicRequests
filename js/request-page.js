@@ -355,6 +355,9 @@ function renderPMTasks() {
           <input type="date" class="pm-date" value="${escapeHtml(task.dueDate || '')}">
         </div>
         <div class="pm-cell">
+          <button type="button" class="pm-row-add-btn" onclick="addPMTask()" title="Add new task">+ Add Task</button>
+        </div>
+        <div class="pm-cell">
           <button type="button" class="pm-delete-btn" onclick="removePMTask(${i})" title="Remove task">✕</button>
         </div>
       </div>`;

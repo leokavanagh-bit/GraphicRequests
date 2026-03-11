@@ -638,7 +638,7 @@ html, body {
 
 .pm-col-headers {
   display: grid;
-  grid-template-columns: 1fr 155px 185px 130px 36px;
+  grid-template-columns: 1fr 155px 185px 130px 90px 36px;
   gap: 0;
   background: var(--ink);
   color: #fff;
@@ -654,7 +654,7 @@ html, body {
 
 .pm-row {
   display: grid;
-  grid-template-columns: 1fr 155px 185px 130px 36px;
+  grid-template-columns: 1fr 155px 185px 130px 90px 36px;
   gap: 0;
   align-items: center;
   border-bottom: 1px solid #f0f0f0;
@@ -696,6 +696,21 @@ html, body {
 .pm-status-inprogress { background: #daeeff !important; color: #1a6fa8 !important; }
 .pm-status-pending    { background: #ffeedd !important; color: #9a5a1a !important; }
 .pm-status-approved   { background: #ddffd5 !important; color: #2a7a1a !important; }
+
+.pm-row-add-btn {
+  background: none;
+  border: 1.5px solid #ccc;
+  border-radius: 3px;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  white-space: nowrap;
+  width: 100%;
+  transition: border-color 0.12s, color 0.12s;
+}
+.pm-row-add-btn:hover { border-color: var(--ink); color: var(--ink); }
 
 .pm-delete-btn {
   background: none;
