@@ -33,13 +33,12 @@ html, body {
   flex-shrink: 0;
 }
 
-.nav-logo {
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  white-space: nowrap;
+.nav-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
   margin-right: 6px;
+  flex-shrink: 0;
 }
 
 .nav-divider {
