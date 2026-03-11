@@ -750,6 +750,50 @@ html, body {
   font-size: 0.85rem;
 }
 
+/* ── Urgent checkbox ─────────────────────────────────────────────────────── */
+
+.urgent-check-wrap {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.urgent-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #e03232;
+  user-select: none;
+}
+
+.urgent-check-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  accent-color: #e03232;
+}
+
+.urgent-check-hint {
+  font-size: 0.72rem;
+  color: #bbb;
+}
+
+/* ── Urgent card flash ───────────────────────────────────────────────────── */
+
+@keyframes urgent-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224, 50, 50, 0); border-color: #e03232; }
+  50%       { box-shadow: 0 0 0 5px rgba(224, 50, 50, 0.35); border-color: #e03232; }
+}
+
+.request-card.urgent {
+  border-color: #e03232 !important;
+  animation: urgent-pulse 1.3s ease-in-out infinite;
+}
+
 /* PM active indicator on board card */
 .card-pm-badge {
   font-size: 0.6rem;

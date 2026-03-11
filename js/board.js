@@ -73,7 +73,7 @@ function renderBoard() {
 
 function createCard(request) {
   const card = document.createElement('div');
-  card.className = 'request-card';
+  card.className = 'request-card' + (request.urgent ? ' urgent' : '');
   card.dataset.id = request.id;
 
   const bg = getCardColor(request);

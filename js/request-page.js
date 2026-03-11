@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         details:       fval('f-details'),
         status:        fval('status'),
         artist:        fval('artist'),
+        urgent:        !!(document.getElementById('f-urgent') || {}).checked,
         files:         pageFiles.slice(),
         deliverable: {
           fileName: fval('d-fileName'),
@@ -180,6 +181,9 @@ function renderRequest() {
   setVal('f-estimatedTime',r.estimatedTime);
   setVal('f-keywords',     r.keywords);
   setVal('f-details',      r.details);
+
+  const urgentEl = document.getElementById('f-urgent');
+  if (urgentEl) urgentEl.checked = !!r.urgent;
 
   const d = r.deliverable || {};
   setVal('d-fileName', d.fileName);
